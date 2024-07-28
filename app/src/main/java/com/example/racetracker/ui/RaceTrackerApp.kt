@@ -37,6 +37,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.racetracker.R
 import com.example.racetracker.ui.theme.RaceTrackerTheme
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun RaceTrackerApp() {
@@ -56,8 +58,11 @@ fun RaceTrackerApp() {
     if (raceInProgress) {
         // launching coroutines safely
         LaunchedEffect(playerOne, playerTwo) {
-            playerOne.run()
-            playerTwo.run()
+            // launch allows both players to run at the same time i.e makes the code run concurrently
+            coroutineScope { // waiting for both coroutines to finish & return
+                launch { playerOne.run() }
+                launch { playerTwo.run() }
+            }
             // when race is finished or user pauses / stops the race cancel the launched coroutines
             raceInProgress = false
         }
