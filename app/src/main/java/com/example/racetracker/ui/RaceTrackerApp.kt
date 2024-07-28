@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +52,16 @@ fun RaceTrackerApp() {
         RaceParticipant(name = "Player 2", progressIncrement = 2)
     }
     var raceInProgress by remember { mutableStateOf(false) }
+
+    if (raceInProgress) {
+        // launching coroutines safely
+        LaunchedEffect(playerOne, playerTwo) {
+            playerOne.run()
+            playerTwo.run()
+            // when race is finished or user pauses / stops the race cancel the launched coroutines
+            raceInProgress = false
+        }
+    }
 
     RaceTrackerScreen(
         playerOne = playerOne,
@@ -150,7 +161,7 @@ private fun StatusIndicator(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
         ) {
             LinearProgressIndicator(
-                progress = progressFactor,
+                progress = { progressFactor },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(dimensionResource(R.dimen.progress_indicator_height))

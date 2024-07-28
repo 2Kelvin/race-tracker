@@ -17,9 +17,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             RaceTrackerTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
+                Surface(modifier = Modifier.fillMaxSize()) {
                     RaceTrackerApp()
                 }
             }
